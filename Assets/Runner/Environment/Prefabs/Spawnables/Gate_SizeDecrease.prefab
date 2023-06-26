@@ -115,6 +115,8 @@ MonoBehaviour:
   m_GateType: 1
   m_Value: -0.5
   m_Text: {fileID: 3161328390415662406}
+  m_MoveDistance: 10
+  m_MoveDuration: 1
 --- !u!1 &1850315646555634819
 GameObject:
   m_ObjectHideFlags: 0

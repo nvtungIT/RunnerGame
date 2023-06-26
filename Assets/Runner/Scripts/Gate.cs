@@ -30,6 +30,23 @@ namespace HyperCasual.Runner
             ChangeSize,
         }
 
+        [SerializeField]
+        private float m_MoveDistance = 2f; // The distance the gate will move in each direction
+        [SerializeField]
+        private float m_MoveDuration = 2f; // The time it takes for the gate to move to one side
+
+        public enum GateStartPosition
+        {
+            Left,
+            Right
+        }
+
+        public GateStartPosition gateStartPosition = GateStartPosition.Left;
+
+        private bool m_IsMovingLeft = false;
+
+        private Coroutine m_MoveCoroutine;
+
         /// <summary>
         /// Sets the local scale of this spawnable object
         /// and ensures the Text attached to this gate
@@ -58,6 +75,7 @@ namespace HyperCasual.Runner
         public override void ResetSpawnable()
         {
             m_Applied = false;
+            StopMoving();
         }
 
         protected override void Awake()
@@ -75,6 +93,7 @@ namespace HyperCasual.Runner
             if (col.CompareTag(k_PlayerTag) && !m_Applied)
             {
                 ActivateGate();
+                StartMoving();
             }
         }
 
@@ -84,14 +103,75 @@ namespace HyperCasual.Runner
             {
                 case GateType.ChangeSpeed:
                     PlayerController.Instance.AdjustSpeed(m_Value);
-                break;
+                    break;
 
                 case GateType.ChangeSize:
                     PlayerController.Instance.AdjustScale(m_Value);
-                break;
+                    break;
             }
 
             m_Applied = true;
+        }
+
+        private void Start()
+        {
+            if (gateStartPosition == GateStartPosition.Left)
+            {
+                m_IsMovingLeft = false;
+            }
+            else
+            {
+                m_IsMovingLeft = true;
+            }
+
+            StartMoving();
+        }
+
+        private void StartMoving()
+        {
+            if (m_MoveCoroutine == null)
+            {
+                m_MoveCoroutine = StartCoroutine(MoveCoroutine());
+            }
+        }
+
+        private void StopMoving()
+        {
+            if (m_MoveCoroutine != null)
+            {
+                StopCoroutine(m_MoveCoroutine);
+                m_MoveCoroutine = null;
+            }
+        }
+
+        private IEnumerator MoveCoroutine()
+        {
+            while (true)
+            {
+                Vector3 targetPosition;
+
+                if (m_IsMovingLeft)
+                {
+                    targetPosition = m_Transform.localPosition + new Vector3(-m_MoveDistance, 0f, 0f);
+                }
+                else
+                {
+                    targetPosition = m_Transform.localPosition + new Vector3(m_MoveDistance, 0f, 0f);
+                }
+
+                float startTime = Time.time;
+                float elapsedTime = 0f;
+
+                while (elapsedTime < m_MoveDuration)
+                {
+                    float t = elapsedTime / m_MoveDuration;
+                    m_Transform.localPosition = Vector3.Lerp(m_Transform.localPosition, targetPosition, t);
+                    elapsedTime = Time.time - startTime;
+                    yield return null;
+                }
+
+                m_IsMovingLeft = !m_IsMovingLeft;
+            }
         }
     }
 }
