@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 314387739941697089}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: -3, y: 1.5, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -115,8 +115,9 @@ MonoBehaviour:
   m_GateType: 1
   m_Value: -0.5
   m_Text: {fileID: 3161328390415662406}
-  m_MoveDistance: 10
+  m_MoveDistance: 6
   m_MoveDuration: 1
+  gateStartPosition: 0
 --- !u!1 &1850315646555634819
 GameObject:
   m_ObjectHideFlags: 0
