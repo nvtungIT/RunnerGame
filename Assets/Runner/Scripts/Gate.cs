@@ -30,9 +30,9 @@ namespace HyperCasual.Runner
             ChangeSize,
         }
 
-        [SerializeField]
-        private float m_MoveDistance = 2f; // The distance the gate will move in each direction
-        [SerializeField]
+
+        private float m_MoveDistance = 6f; // The distance the gate will move in each direction
+       
         private float m_MoveDuration = 2f; // The time it takes for the gate to move to one side
 
         public enum GateStartPosition
@@ -46,6 +46,7 @@ namespace HyperCasual.Runner
         private bool m_IsMovingLeft = false;
 
         private Coroutine m_MoveCoroutine;
+        private Vector3 m_DefaultPosition;
 
         /// <summary>
         /// Sets the local scale of this spawnable object
@@ -76,6 +77,7 @@ namespace HyperCasual.Runner
         {
             m_Applied = false;
             StopMoving();
+            ResetPosition();
         }
 
         protected override void Awake()
@@ -86,6 +88,8 @@ namespace HyperCasual.Runner
             {
                 m_TextInitialScale = m_Text.localScale;
             }
+
+            m_DefaultPosition = m_Transform.localPosition;
         }
 
         void OnTriggerEnter(Collider col)
@@ -141,6 +145,18 @@ namespace HyperCasual.Runner
             {
                 StopCoroutine(m_MoveCoroutine);
                 m_MoveCoroutine = null;
+            }
+        }
+
+        private void ResetPosition()
+        {
+            if (gateStartPosition == GateStartPosition.Left)
+            {
+                m_Transform.localPosition = new Vector3(-3f, m_DefaultPosition.y, m_DefaultPosition.z);
+            }
+            else
+            {
+                m_Transform.localPosition = new Vector3(3f, m_DefaultPosition.y, m_DefaultPosition.z);
             }
         }
 
